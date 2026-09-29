@@ -20,34 +20,30 @@ function App() {
   const [patientError, setPatientError] = useState('')
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const fetchDoctors = async () => {
       try {
-        const doctorData: Doctor[] = [
-          {
-            name: 'Dr. Patel',
-            specialization: 'General Physician',
-          },
-          {
-            name: 'Dr. Shah',
-            specialization: 'Cardiologist',
-          },
-          {
-            name: 'Dr. Mehta',
-            specialization: 'Dermatologist',
-          },
-        ]
+        setLoading(true)
+        setError('')
+
+        const response = await fetch(
+          'http://localhost:5000/api/doctors',
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch doctors')
+        }
+
+        const doctorData: Doctor[] = await response.json()
 
         setDoctors(doctorData)
-        setLoading(false)
       } catch {
         setError('Unable to load doctors')
+      } finally {
         setLoading(false)
       }
-    }, 2000)
-
-    return () => {
-      clearTimeout(timer)
     }
+
+    fetchDoctors()
   }, [])
 
   return (
