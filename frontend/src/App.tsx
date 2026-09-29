@@ -1,29 +1,54 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import DoctorList from './components/DoctorList'
 import Navbar from './components/Navbar'
 
 import './App.css'
 
+type Doctor = {
+  name: string
+  specialization: string
+}
+
 function App() {
-  const doctors = [
-    {
-      name: 'Dr. Patel',
-      specialization: 'General Physician',
-    },
-    {
-      name: 'Dr. Shah',
-      specialization: 'Cardiologist',
-    },
-    {
-      name: 'Dr. Mehta',
-      specialization: 'Dermatologist',
-    },
-  ]
+  const [doctors, setDoctors] = useState<Doctor[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   const [status, setStatus] = useState('Pending')
   const [name, setName] = useState('')
-  const [error, setError] = useState('')
+  const [patientError, setPatientError] = useState('')
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const doctorData: Doctor[] = [
+          {
+            name: 'Dr. Patel',
+            specialization: 'General Physician',
+          },
+          {
+            name: 'Dr. Shah',
+            specialization: 'Cardiologist',
+          },
+          {
+            name: 'Dr. Mehta',
+            specialization: 'Dermatologist',
+          },
+        ]
+
+        setDoctors(doctorData)
+        setLoading(false)
+      } catch {
+        setError('Unable to load doctors')
+        setLoading(false)
+      }
+    }, 2000)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
 
   return (
     <>
@@ -53,11 +78,11 @@ function App() {
             event.preventDefault()
 
             if (name.trim() === '') {
-              setError('Please enter your name')
+              setPatientError('Please enter your name')
               return
             }
 
-            setError('')
+            setPatientError('')
             alert(`Patient saved: ${name}`)
           }}
         >
@@ -73,11 +98,21 @@ function App() {
           </button>
         </form>
 
-        {error && <p>{error}</p>}
+        {patientError && <p>{patientError}</p>}
 
         <p>Patient Name: {name}</p>
 
-        <DoctorList doctors={doctors} />
+        {loading ? (
+          <p className="mt-6 text-gray-600">
+            Loading doctors...
+          </p>
+        ) : error ? (
+          <p className="mt-6 text-red-600">
+            {error}
+          </p>
+        ) : (
+          <DoctorList doctors={doctors} />
+        )}
       </main>
     </>
   )
