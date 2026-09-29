@@ -11,20 +11,32 @@ function Navbar({ name, showLogin }: NavbarProps) {
       </h2>
 
       <div className="flex gap-6">
-        <a href="#" className="hover:text-blue-200">
+        <a
+          href="#"
+          className="hover:text-blue-200"
+        >
           Home
         </a>
 
-        <a href="#" className="hover:text-blue-200">
+        <a
+          href="#"
+          className="hover:text-blue-200"
+        >
           Doctors
         </a>
 
-        <a href="#" className="hover:text-blue-200">
+        <a
+          href="#"
+          className="hover:text-blue-200"
+        >
           Appointments
         </a>
 
         {showLogin && (
-          <a href="#" className="hover:text-blue-200">
+          <a
+            href="#"
+            className="hover:text-blue-200"
+          >
             Login
           </a>
         )}
